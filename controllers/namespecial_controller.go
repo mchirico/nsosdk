@@ -68,6 +68,7 @@ func (r *NamespecialReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 	//	r.recorder.Event(instance, "Reconcile", "Loop", fmt.Sprintf("Sample msg %s/%s", "one", "two"))
 	//}
 
+	// TODO-mmc: This is future placeholder.
 	var instance topv1alpha1.Namespecial
 	if err := r.Get(ctx, req.NamespacedName, &instance); err != nil {
 
@@ -79,8 +80,7 @@ func (r *NamespecialReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		// on deleted requests.
 
 		// return ctrl.Result{}, client.IgnoreNotFound(err)
-		fmt.Printf("here2")
-
+		// fmt.Printf("Normally we'd have something to work with...")
 	}
 
 	r.Log.Info("Start Reconcile:", "test", "one")
@@ -94,15 +94,14 @@ func (r *NamespecialReconciler) Reconcile(ctx context.Context, req ctrl.Request)
 		log.V(1).Info("here sample logging")
 
 		if strings.Contains(err.Error(), "not found") {
-			fmt.Printf("We create\n")
+			fmt.Printf("\nNamespace not found, will attempt to create...\n")
 			err = r.Client.Create(context.TODO(), ns)
 			if err != nil {
-				fmt.Printf("E")
+				fmt.Printf("Extra err ") // TODO-mmc:  do something with this..
 				return ctrl.Result{}, err
 			}
-			fmt.Printf("requeue\n\n")
-			return ctrl.Result{}, nil
-			//return ctrl.Result{Requeue: true}, nil
+			fmt.Printf("\n ** Namespace created **\n\n")
+			return ctrl.Result{Requeue: true}, nil // TODO-mmc: Make note you should Requeue for test
 		}
 	}
 
